@@ -11,6 +11,9 @@ public class Shooter : MonoBehaviour
     public float fireRate = 2.0f;
     public float bulletSize = 1.0f;
 
+    public Transform arm;
+    Transform aimStart;
+
     LineRenderer line;
     Vector3 aimPos;
 
@@ -21,10 +24,14 @@ public class Shooter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        aimStart = arm.GetChild(0).transform;
+
         line = GetComponent<LineRenderer>();
         line.startWidth = 0.05f;
         line.endWidth = 0.05f;
+
         Cursor.visible = false;
+
         bulletsParent = new GameObject("Bullets");
         bullets = new List<GameObject>();
     }
@@ -40,12 +47,26 @@ public class Shooter : MonoBehaviour
 
     void AimLine()
     {
-        line.SetPosition(0, transform.position);
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        aimPos = (mousePos - transform.position).normalized;
-        aimPos = new Vector3(aimPos.x, aimPos.y, 0);
-        //Debug.Log(aimPos);
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, aimPos, 40, ~576);
+
+        arm.right = new Vector3(mousePos.x, mousePos.y, 0) - transform.position;
+        if (arm.right.x < 0)
+        {
+            arm.GetComponent<SpriteRenderer>().flipY = true;
+            aimStart.localPosition = new Vector3(0.8f, -0.21f, 0);
+        }
+        else
+        {
+            arm.GetComponent<SpriteRenderer>().flipY = false;
+            aimStart.localPosition = new Vector3(0.8f, 0.21f, 0);
+        }
+
+        Vector3 aimStartPos = arm.GetChild(0).position;
+
+        aimPos = arm.GetChild(0).transform.right;
+        
+        RaycastHit2D hit = Physics2D.Raycast(aimStartPos, aimPos, 40, ~576);
+        line.SetPosition(0, aimStartPos);
         if (hit.point != Vector2.zero)
             line.SetPosition(1, hit.point);
         else
@@ -63,10 +84,8 @@ public class Shooter : MonoBehaviour
             bullet.AddComponent<BoxCollider2D>().isTrigger = true;
 
             Transform tran = bullet.transform;
-            tran.position = transform.position;
-            Vector3 dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            float angle = Vector2.SignedAngle(Vector2.right, dir);
-            tran.eulerAngles = new Vector3(0, 0, angle);
+            tran.position = arm.GetChild(0).transform.position;
+            tran.right = aimPos;
 
             bullet.layer = 9;
             bullet.tag = "PlayerBullet";

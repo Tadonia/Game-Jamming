@@ -19,11 +19,13 @@ public class PlayerController : MonoBehaviour
     float dashTimer;
 
     Rigidbody2D rb;
+    Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -32,6 +34,7 @@ public class PlayerController : MonoBehaviour
         Deceleration();
         GetInputs();
         Movement();
+        animator.SetFloat("MoveX", speed);
         //Debug.Log(speed);
     }
 
@@ -58,7 +61,7 @@ public class PlayerController : MonoBehaviour
 
     void GetInputs()
     {
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButton("Jump") && isGrounded)
         {
             rb.AddForce(new Vector2(0, maxJumpHeight), ForceMode2D.Impulse);
             isGrounded = false;
