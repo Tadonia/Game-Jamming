@@ -11,6 +11,8 @@ public class Shooter : MonoBehaviour
     void Start()
     {
         line = GetComponent<LineRenderer>();
+        line.startWidth = 0.1f;
+        line.endWidth = 0.1f;
     }
 
     // Update is called once per frame
@@ -21,6 +23,10 @@ public class Shooter : MonoBehaviour
         aimPos = (mousePos - transform.position).normalized;
         aimPos = new Vector3(aimPos.x, aimPos.y, 0);
         //Debug.Log(aimPos);
-        line.SetPosition(1, aimPos * 1000);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, aimPos, 40, ~64);
+        if (hit.point != Vector2.zero)
+            line.SetPosition(1, hit.point);
+        else
+            line.SetPosition(1, aimPos * 1000);
     }
 }
