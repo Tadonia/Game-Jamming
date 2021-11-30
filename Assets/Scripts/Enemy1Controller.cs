@@ -7,6 +7,7 @@ public class Enemy1Controller : MonoBehaviour
     public float health = 5.0f;
     public float minSpeed = 3.0f;
     public float maxSpeed = 4.0f;
+    public bool dead;
 
     float speed = 5.0f;
 
@@ -20,12 +21,14 @@ public class Enemy1Controller : MonoBehaviour
     Vector2 dashEndPos;
 
     Transform player;
+    SpriteRenderer sprite;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         speed = Random.Range(minSpeed, maxSpeed);
+        sprite = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -44,10 +47,12 @@ public class Enemy1Controller : MonoBehaviour
         if (pos.x > playerPos.x)
         {
             pos.x -= speed * Time.deltaTime;
+            sprite.flipX = false;
         }
         else if (pos.x < playerPos.x)
         {
             pos.x += speed * Time.deltaTime;
+            sprite.flipX = true;
         }
 
         transform.position = pos;
@@ -58,7 +63,7 @@ public class Enemy1Controller : MonoBehaviour
         Vector2 pos = transform.position;
         Vector2 playerPos = player.position;
 
-        if (Vector2.Distance(pos, playerPos) <= 5 && !dashing && !spinning)
+        if (Vector2.Distance(pos, playerPos) <= 5.5f && !dashing && !spinning)
         {
             spinning = true;
             spinStartTime = Time.time;
@@ -100,7 +105,7 @@ public class Enemy1Controller : MonoBehaviour
     {
         if (health <= 0)
         {
-            Destroy(gameObject);
+            dead = true;
         }
     }
 
