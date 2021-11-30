@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - PlayerBullet
+  - HealthBar
+  - Enemy
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX

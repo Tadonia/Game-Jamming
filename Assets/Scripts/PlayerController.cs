@@ -1,14 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public float maxHealth = 10.0f;
     public float acceleration = 2.0f;
     public float maxSpeed = 5.0f;
     public float maxJumpHeight = 7.0f;
     public float dashSpeed = 10.0f;
+    public float immunityTime = 0.5f;
 
+    float health;
+    float hitStartTime;
     float speed;
 
     bool moving;
@@ -20,12 +25,19 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rb;
     Animator animator;
+    Image healthBar;
+    ParticleSystem afterimages;
+    ParticleSystemRenderer afterimagesRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
+        health = maxHealth;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        healthBar = GameObject.FindGameObjectWithTag("HealthBar").transform.GetChild(1).GetComponent<Image>();
+        afterimages = GetComponent<ParticleSystem>();
+        afterimagesRenderer = GetComponent<ParticleSystemRenderer>();
     }
 
     // Update is called once per frame
@@ -34,8 +46,11 @@ public class PlayerController : MonoBehaviour
         Deceleration();
         GetInputs();
         Movement();
+        AfterImages();
+        ChangeHealthBar();
         animator.SetFloat("MoveX", speed);
         //Debug.Log(speed);
+        Debug.Log(dashing);
     }
 
     void Deceleration()
@@ -57,6 +72,14 @@ public class PlayerController : MonoBehaviour
                     speed = speed + acceleration * 2 * Time.deltaTime;
             }
         }
+
+        /*if (speed > -0.1f && speed < 0.1f)
+        {
+            animator.speed = 0;
+        }
+        else { animator.speed = 1; }*/
+
+        animator.speed = Mathf.Abs(speed) / (maxSpeed - 1);
     }
 
     void GetInputs()
@@ -137,8 +160,39 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void AfterImages()
+    {
+        if (dashing && afterimages.isStopped)
+        {
+            afterimages.Play();
+            if (speed > 0) afterimagesRenderer.flip = Vector3.zero;
+            else if (speed < 0) afterimagesRenderer.flip = Vector3.right;
+        }
+        else if (!dashing)
+        {
+            afterimages.Stop();
+        }
+    }
+
+    void ChangeHealthBar()
+    {
+        healthBar.fillAmount = health / maxHealth;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isGrounded = true;
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy") || collision.CompareTag("EnemyBullet"))
+        {
+            if (Time.time > hitStartTime + immunityTime)
+            {
+                health -= 1;
+                hitStartTime = Time.time;
+            }
+        }
     }
 }

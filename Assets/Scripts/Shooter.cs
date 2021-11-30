@@ -7,7 +7,7 @@ public class Shooter : MonoBehaviour
     public Sprite bulletSprite;
     public GameObject explosion;
 
-    public float speed = 7.0f;
+    public float bulletSpeed = 7.0f;
     public float fireRate = 2.0f;
     public float bulletSize = 1.0f;
 
@@ -99,7 +99,7 @@ public class Shooter : MonoBehaviour
         if (bullets.Count != 0)
             foreach (GameObject bullet in bullets)
             {
-                bullet.transform.Translate(new Vector3(speed * Time.deltaTime, 0, 0), bullet.transform);
+                bullet.transform.Translate(new Vector3(bulletSpeed * Time.deltaTime, 0, 0), bullet.transform);
             }
     }
 
@@ -108,12 +108,17 @@ public class Shooter : MonoBehaviour
         for (int i = bullets.Count - 1; i >= 0; i--)
         {
             Vector2 pos = bullets[i].transform.position;
-            if (bullets[i].GetComponent<BoxCollider2D>().IsTouchingLayers(64*2) || pos.x > 20 || pos.x < -20 || pos.y > 10 || pos.y < -5)
+            if (bullets[i].GetComponent<BoxCollider2D>().IsTouchingLayers(128 + 256) || pos.x > 20 || pos.x < -20 || pos.y > 10 || pos.y < -5)
             {
                 Instantiate(explosion, bullets[i].transform.position, Quaternion.identity);
                 Destroy(bullets[i]);
                 bullets.RemoveAt(i);
             }
         }
+    }
+
+    public Transform GetArm()
+    {
+        return arm;
     }
 }
