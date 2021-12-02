@@ -13,6 +13,7 @@ public class WaveManager : MonoBehaviour
     public RectTransform statsScreen;
     public RectTransform levelScreen;
     public RectTransform levelUpButton;
+    public RectTransform curseMenu;
     public Image background;
 
     GameObject enemyParent;
@@ -20,6 +21,8 @@ public class WaveManager : MonoBehaviour
 
     bool levelingUp;
     float levelUpStartTime;
+    bool cursing;
+    float curseStartTime;
 
     bool nextWave;
     float waveStartTime;
@@ -34,6 +37,7 @@ public class WaveManager : MonoBehaviour
         statsScreen.anchoredPosition = new Vector2(-841.5f, -70);
         levelScreen.anchoredPosition = new Vector2(774, -70);
         levelUpButton.anchoredPosition = new Vector2(246, -70);
+        curseMenu.anchoredPosition = new Vector2(1600, 0);
         background.color = new Color(0, 0, 0, 0);
     }
 
@@ -150,7 +154,7 @@ public class WaveManager : MonoBehaviour
 
     void WaveComplete()
     {
-        if (enemies.Count == 0 && !nextWave && !levelingUp)
+        if (enemies.Count == 0 && !nextWave && !levelingUp && !cursing)
         {
             levelingUp = true;
             levelUpStartTime = Time.time;
@@ -165,15 +169,30 @@ public class WaveManager : MonoBehaviour
             background.color = Color.Lerp(new Color(0, 0, 0, 0), new Color(0, 0, 0, 0.5f), (Time.time - levelUpStartTime) / 1);
         }
 
-        if (LevelUp.leveledUp)
+        if (LevelUp.close)
         {
-            LevelUp.leveledUp = false;
+            LevelUp.close = false;
+            levelingUp = false;
+            cursing = true;
+            curseStartTime = Time.time;
+
             statsScreen.anchoredPosition = new Vector2(-841.5f, -70);
             levelScreen.anchoredPosition = new Vector2(774, -70);
             levelUpButton.anchoredPosition = new Vector2(246, -70);
-            background.color = new Color(0, 0, 0, 0);
+        }
 
-            levelingUp = false;
+        if (cursing)
+        {
+            curseMenu.anchoredPosition = Vector2.Lerp(new Vector2(1600, 0), new Vector2(0, 0), (Time.time - curseStartTime) / 1);
+        }
+
+        if (BothOrNeither.close)
+        {
+            BothOrNeither.close = false;
+            curseMenu.anchoredPosition = new Vector2(1600, 0);
+            background.color = new Color(0, 0, 0, 0);
+            cursing = false;
+            PlayerController.health = PlayerController.maxHealth;
             nextWave = true;
             waveStartTime = Time.time;
         }
