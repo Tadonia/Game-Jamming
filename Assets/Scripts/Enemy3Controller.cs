@@ -95,7 +95,7 @@ public class Enemy3Controller : MonoBehaviour
     {
         if (collision.CompareTag("PlayerBullet"))
         {
-            health -= 1;
+            health -= Shooter.bulletDamage;
         }
     }
 }

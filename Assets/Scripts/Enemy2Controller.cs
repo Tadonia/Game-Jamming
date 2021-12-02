@@ -108,7 +108,7 @@ public class Enemy2Controller : MonoBehaviour
     {
         if (collision.CompareTag("PlayerBullet"))
         {
-            health -= Shooter.GetBulletDamage();
+            health -= Shooter.bulletDamage;
         }
     }
 }

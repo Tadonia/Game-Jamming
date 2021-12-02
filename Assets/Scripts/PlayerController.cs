@@ -5,16 +5,16 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public float maxHealth = 10.0f;
-    public float defence = 0.0f;
-    public float damageReduction = 1.0f;
-    public float acceleration = 2.0f;
-    public float maxSpeed = 5.0f;
-    public float maxJumpHeight = 7.0f;
-    public float dashSpeed = 10.0f;
-    public float immunityTime = 0.5f;
+    public static float maxHealth;
+    public static float defence;
+    public static float damageReduction;
+    public static float acceleration;
+    public static float maxSpeed;
+    public static float maxJumpHeight;
+    public static float dashSpeed;
+    public static float immunityTime;
 
-    float health;
+    public static float health;
     float hitStartTime;
     float speed;
 

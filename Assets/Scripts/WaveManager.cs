@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WaveManager : MonoBehaviour
 {
@@ -9,8 +10,17 @@ public class WaveManager : MonoBehaviour
     public GameObject enemy2;
     public GameObject enemy3;
 
+    public RectTransform statsScreen;
+    public RectTransform levelScreen;
+    public RectTransform levelUpButton;
+    public Image background;
+
     GameObject enemyParent;
     List<GameObject> enemies;
+
+    bool levelingUp;
+    float levelUpStartTime;
+
     bool nextWave;
     float waveStartTime;
 
@@ -20,6 +30,11 @@ public class WaveManager : MonoBehaviour
         enemyParent = new GameObject("Enemies");
         waveNum = 0;
         enemies = new List<GameObject>();
+
+        statsScreen.anchoredPosition = new Vector2(-841.5f, -70);
+        levelScreen.anchoredPosition = new Vector2(774, -70);
+        levelUpButton.anchoredPosition = new Vector2(246, -70);
+        background.color = new Color(0, 0, 0, 0);
     }
 
     // Update is called once per frame
@@ -37,7 +52,7 @@ public class WaveManager : MonoBehaviour
             nextWave = false;
         }
         EnemyDeath();
-        NextWave();
+        WaveComplete();
     }
 
     void Wave1()
@@ -90,7 +105,7 @@ public class WaveManager : MonoBehaviour
     {
         int side = Random.Range(0, 2);
         side = side == 0 ? -20 : 20;
-        float yRand = Random.Range(2.0f, 5.0f);
+        float yRand = Random.Range(-5.0f, 5.0f);
 
         Vector2 pos = new Vector2(side, yRand);
         GameObject enemy = Instantiate(enemy3, pos, Quaternion.identity);
@@ -133,10 +148,32 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    void NextWave()
+    void WaveComplete()
     {
-        if (enemies.Count == 0 && !nextWave)
+        if (enemies.Count == 0 && !nextWave && !levelingUp)
         {
+            levelingUp = true;
+            levelUpStartTime = Time.time;
+            LevelUp.PointsUp();
+        }
+
+        if (levelingUp)
+        {
+            statsScreen.anchoredPosition = Vector2.Lerp(new Vector2(-841.5f, -70), new Vector2(120, -70), (Time.time - levelUpStartTime) / 1);
+            levelScreen.anchoredPosition = Vector2.Lerp(new Vector2(774, -70), new Vector2(-120, -70), (Time.time - levelUpStartTime) / 1);
+            levelUpButton.anchoredPosition = Vector2.Lerp(new Vector2(246, -70), new Vector2(-120, 70), (Time.time - levelUpStartTime) / 1);
+            background.color = Color.Lerp(new Color(0, 0, 0, 0), new Color(0, 0, 0, 0.5f), (Time.time - levelUpStartTime) / 1);
+        }
+
+        if (LevelUp.leveledUp)
+        {
+            LevelUp.leveledUp = false;
+            statsScreen.anchoredPosition = new Vector2(-841.5f, -70);
+            levelScreen.anchoredPosition = new Vector2(774, -70);
+            levelUpButton.anchoredPosition = new Vector2(246, -70);
+            background.color = new Color(0, 0, 0, 0);
+
+            levelingUp = false;
             nextWave = true;
             waveStartTime = Time.time;
         }

@@ -7,10 +7,10 @@ public class Shooter : MonoBehaviour
     public Sprite bulletSprite;
     public GameObject explosion;
 
-    public float bulletSpeed = 7.0f;
-    public float fireRate = 2.0f;
-    public float bulletSize = 1.0f;
-    public float bulletDamage = 1.0f;
+    public static float bulletSpeed;
+    public static float fireRate;
+    public static float bulletSize;
+    public static float bulletDamage;
 
     public Transform arm;
     Transform aimStart;
@@ -86,6 +86,7 @@ public class Shooter : MonoBehaviour
 
             Transform tran = bullet.transform;
             tran.position = arm.GetChild(0).transform.position;
+            tran.localScale = new Vector3(bulletSize, bulletSize, 1);
             tran.right = aimPos;
 
             bullet.layer = 9;
@@ -121,10 +122,5 @@ public class Shooter : MonoBehaviour
     public Transform GetArm()
     {
         return arm;
-    }
-
-    public static float GetBulletDamage()
-    {
-        return GameObject.FindGameObjectWithTag("Player").GetComponent<Shooter>().bulletDamage;
     }
 }
