@@ -10,6 +10,7 @@ public class Shooter : MonoBehaviour
     public float bulletSpeed = 7.0f;
     public float fireRate = 2.0f;
     public float bulletSize = 1.0f;
+    public float bulletDamage = 1.0f;
 
     public Transform arm;
     Transform aimStart;
@@ -120,5 +121,10 @@ public class Shooter : MonoBehaviour
     public Transform GetArm()
     {
         return arm;
+    }
+
+    public static float GetBulletDamage()
+    {
+        return GameObject.FindGameObjectWithTag("Player").GetComponent<Shooter>().bulletDamage;
     }
 }

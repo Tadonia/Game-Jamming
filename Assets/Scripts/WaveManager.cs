@@ -6,6 +6,9 @@ public class WaveManager : MonoBehaviour
 {
     public int waveNum;
     public GameObject enemy1;
+    public GameObject enemy2;
+    public GameObject enemy3;
+
     GameObject enemyParent;
     List<GameObject> enemies;
     bool nextWave;
@@ -47,9 +50,13 @@ public class WaveManager : MonoBehaviour
 
     void Wave2()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 15; i++)
         {
-            CreateEnemy1();
+            CreateEnemy3();
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            CreateEnemy2();
         }
     }
 
@@ -66,6 +73,32 @@ public class WaveManager : MonoBehaviour
         enemies.Add(enemy);
     }
 
+    void CreateEnemy2()
+    {
+        int side = Random.Range(0, 2);
+        side = side == 0 ? -20 : 20;
+        float yRand = Random.Range(-0.5f, -0.5f);
+
+        Vector2 pos = new Vector2(side, yRand);
+        GameObject enemy = Instantiate(enemy2, pos, Quaternion.identity);
+        enemy.transform.parent = enemyParent.transform;
+
+        enemies.Add(enemy);
+    }
+
+    void CreateEnemy3()
+    {
+        int side = Random.Range(0, 2);
+        side = side == 0 ? -20 : 20;
+        float yRand = Random.Range(2.0f, 5.0f);
+
+        Vector2 pos = new Vector2(side, yRand);
+        GameObject enemy = Instantiate(enemy3, pos, Quaternion.identity);
+        enemy.transform.parent = enemyParent.transform;
+
+        enemies.Add(enemy);
+    }
+
     void EnemyDeath()
     {
         if (enemies.Count != 0)
@@ -75,6 +108,22 @@ public class WaveManager : MonoBehaviour
                 if (enemies[i].TryGetComponent<Enemy1Controller>(out Enemy1Controller enemy1))
                 {
                     if (enemy1.dead)
+                    {
+                        Destroy(enemies[i]);
+                        enemies.RemoveAt(i);
+                    }
+                }
+                else if (enemies[i].TryGetComponent<Enemy2Controller>(out Enemy2Controller enemy2))
+                {
+                    if (enemy2.dead)
+                    {
+                        Destroy(enemies[i]);
+                        enemies.RemoveAt(i);
+                    }
+                }
+                else if (enemies[i].TryGetComponent<Enemy3Controller>(out Enemy3Controller enemy3))
+                {
+                    if (enemy3.dead)
                     {
                         Destroy(enemies[i]);
                         enemies.RemoveAt(i);

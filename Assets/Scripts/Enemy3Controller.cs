@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy1Controller : MonoBehaviour
+public class Enemy3Controller : MonoBehaviour
 {
     public float health = 5.0f;
     public float minSpeed = 3.0f;
@@ -13,9 +13,6 @@ public class Enemy1Controller : MonoBehaviour
     float speed = 5.0f;
 
     bool dashing;
-    bool spinning;
-    float spinSpeed;
-    float spinStartTime;
     float dashStartTime;
     float dashDuration;
     Vector2 dashStartPos;
@@ -35,7 +32,7 @@ public class Enemy1Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!dashing && !spinning)
+        if (!dashing)
             MoveTowardsPlayer();
         DashTowardsPlayer();
         Die();
@@ -64,42 +61,26 @@ public class Enemy1Controller : MonoBehaviour
         Vector2 pos = transform.position;
         Vector2 playerPos = player.position;
 
-        if (Vector2.Distance(pos, playerPos) <= 5.5f && !dashing && !spinning)
+        if ((pos.x < playerPos.x + 5 || pos.x > playerPos.x - 5) && !dashing)
         {
-            spinning = true;
-            spinStartTime = Time.time;
-        }
-
-        if (spinning)
-        {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, transform.rotation.eulerAngles.z + spinSpeed * Time.deltaTime));
-            if (Time.time < spinStartTime + 2)
-                spinSpeed += 720 * Time.deltaTime;
-            else
-            {
-                dashing = true;
-                spinning = false;
-                dashStartTime = Time.time;
-                dashStartPos = pos;
-                dashEndPos = playerPos;
-                dashDuration = Vector2.Distance(dashStartPos, dashEndPos) / (speed * 2);
-            }
+            dashing = true;
+            dashStartTime = Time.time;
+            dashStartPos = pos;
+            //Vector2 dir = pos.y > playerPos.y ? new Vector2(0, -0.8f) : pos.y < playerPos.y ? new Vector2(0, 1.2f) : Vector2.zero;
+            dashEndPos = pos + new Vector2(0, 0.2f) + (playerPos - pos).normalized * 10;
+            dashDuration = Vector2.Distance(dashStartPos, dashEndPos) / (speed * 2);
         }
 
         if (dashing)
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, transform.rotation.eulerAngles.z + spinSpeed * Time.deltaTime));
             float t = (Time.time - dashStartTime) / dashDuration;
+
             if (dashStartPos != dashEndPos)
-                transform.position = Vector2.Lerp(dashStartPos, dashEndPos, t);
-            spinSpeed -= 720 * Time.deltaTime;
-            if (t >= 1)
-            {
-                transform.rotation = Quaternion.Euler(0, 0, 0);
-                spinSpeed = 0;
-                dashing = false;
-            }
+                transform.position = Vector2.Lerp(dashStartPos, dashEndPos, 1 - Mathf.Pow(1 - t, 3));
         }
+
+        if (Time.time > dashStartTime + 0.8f)
+            dashing = false;
     }
 
     void Die()
@@ -114,7 +95,7 @@ public class Enemy1Controller : MonoBehaviour
     {
         if (collision.CompareTag("PlayerBullet"))
         {
-            health -= Shooter.GetBulletDamage();
+            health -= 1;
         }
     }
 }

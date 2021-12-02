@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public float maxHealth = 10.0f;
+    public float defence = 0.0f;
+    public float damageReduction = 1.0f;
     public float acceleration = 2.0f;
     public float maxSpeed = 5.0f;
     public float maxJumpHeight = 7.0f;
@@ -18,14 +20,15 @@ public class PlayerController : MonoBehaviour
 
     bool moving;
     bool isGrounded;
+
     bool dashing;
     char lastDashInput;
-
     float dashTimer;
 
     Rigidbody2D rb;
     Animator animator;
     Image healthBar;
+    Text healthBarNumber;
     ParticleSystem afterimages;
     ParticleSystemRenderer afterimagesRenderer;
 
@@ -36,6 +39,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         healthBar = GameObject.FindGameObjectWithTag("HealthBar").transform.GetChild(1).GetComponent<Image>();
+        healthBarNumber = GameObject.FindGameObjectWithTag("HealthBar").transform.GetComponentInChildren<Text>();
         afterimages = GetComponent<ParticleSystem>();
         afterimagesRenderer = GetComponent<ParticleSystemRenderer>();
     }
@@ -48,9 +52,9 @@ public class PlayerController : MonoBehaviour
         Movement();
         AfterImages();
         ChangeHealthBar();
-        animator.SetFloat("MoveX", speed);
+        animator.SetFloat("MoveX", speed * 1.5f);
         //Debug.Log(speed);
-        Debug.Log(dashing);
+        //Debug.Log(dashing);
     }
 
     void Deceleration()
@@ -177,6 +181,7 @@ public class PlayerController : MonoBehaviour
     void ChangeHealthBar()
     {
         healthBar.fillAmount = health / maxHealth;
+        healthBarNumber.text = decimal.Round((decimal)health, 2) + "/" + decimal.Round((decimal)maxHealth, 2);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -188,9 +193,24 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("Enemy") || collision.CompareTag("EnemyBullet"))
         {
+            float damage = 0;
+            if (collision.TryGetComponent<Enemy1Controller>(out Enemy1Controller enemy1))
+            {
+                damage = enemy1.damage;
+            }
+            else if (collision.TryGetComponent<Enemy2Controller>(out Enemy2Controller enemy2))
+            {
+                damage = enemy2.damage;
+            }
+            else if (collision.TryGetComponent<Enemy3Controller>(out Enemy3Controller enemy3))
+            {
+                damage = enemy3.damage;
+            }
+            damage = damage / damageReduction - defence;
+
             if (Time.time > hitStartTime + immunityTime)
             {
-                health -= 1;
+                health -= damage;
                 hitStartTime = Time.time;
             }
         }
