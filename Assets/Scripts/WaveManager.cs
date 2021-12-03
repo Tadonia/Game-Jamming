@@ -26,6 +26,9 @@ public class WaveManager : MonoBehaviour
 
     bool nextWave;
     float waveStartTime;
+    bool enemy1SpawnFinish = true;
+    bool enemy2SpawnFinish = true;
+    bool enemy3SpawnFinish = true;
 
     // Start is called before the first frame update
     void Start()
@@ -49,9 +52,51 @@ public class WaveManager : MonoBehaviour
             Wave1();
             waveNum++;
         }
-        if (waveNum == 1 && nextWave && Time.time > waveStartTime + 2)
+        else if (waveNum == 1 && nextWave && Time.time > waveStartTime + 2)
         {
             Wave2();
+            waveNum++;
+            nextWave = false;
+        }
+        else if (waveNum == 2 && nextWave && Time.time > waveStartTime + 2)
+        {
+            Wave3();
+            waveNum++;
+            nextWave = false;
+        }
+        else if (waveNum == 3 && nextWave && Time.time > waveStartTime + 2)
+        {
+            Wave4();
+            waveNum++;
+            nextWave = false;
+        }
+        else if (waveNum == 4 && nextWave && Time.time > waveStartTime + 2)
+        {
+            Wave5();
+            waveNum++;
+            nextWave = false;
+        }
+        else if (waveNum == 5 && nextWave && Time.time > waveStartTime + 2)
+        {
+            Wave6();
+            waveNum++;
+            nextWave = false;
+        }
+        else if (waveNum == 6 && nextWave && Time.time > waveStartTime + 2)
+        {
+            Wave7();
+            waveNum++;
+            nextWave = false;
+        }
+        else if (waveNum == 7 && nextWave && Time.time > waveStartTime + 2)
+        {
+            Wave8();
+            waveNum++;
+            nextWave = false;
+        }
+        else if (waveNum >= 8 && nextWave && Time.time > waveStartTime + 2)
+        {
+            Wave9AndBeyond();
             waveNum++;
             nextWave = false;
         }
@@ -69,14 +114,145 @@ public class WaveManager : MonoBehaviour
 
     void Wave2()
     {
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 5; i++)
         {
-            CreateEnemy3();
+            CreateEnemy1();
         }
         for (int i = 0; i < 5; i++)
         {
             CreateEnemy2();
         }
+    }
+
+    void Wave3()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            CreateEnemy3();
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            CreateEnemy2();
+        }
+    }
+
+    void Wave4()
+    {
+        for (int i = 0; i < 15; i++)
+        {
+            CreateEnemy2();
+        }
+    }
+
+    void Wave5()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            CreateEnemy1();
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            CreateEnemy3();
+        }
+    }
+
+    void Wave6()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            CreateEnemy1();
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            CreateEnemy2();
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            CreateEnemy3();
+        }
+    }
+
+    void Wave7()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            CreateEnemy3();
+        }
+    }
+
+    void Wave8()
+    {
+        for (int i = 0; i < 25; i++)
+        {
+            CreateEnemy1();
+        }
+    }
+
+    void Wave9AndBeyond()
+    {
+        CreateEnemy1();
+        CreateEnemy2();
+        CreateEnemy3();
+        StartCoroutine(Wave9Enemy1());
+        StartCoroutine(Wave9Enemy2());
+        StartCoroutine(Wave9Enemy3());
+    }
+
+    IEnumerator Wave9Enemy1()
+    {
+        enemy1SpawnFinish = false;
+        float spawnStartTime = Time.time;
+        float rand = Random.Range(0, 0.2f);
+        for (int i = 0; i < waveNum * 2 - 16; i++)
+        {
+            yield return null;
+            if (Time.time > spawnStartTime + rand)
+            {
+                CreateEnemy1();
+                spawnStartTime = Time.time;
+                rand = Random.Range(0, 0.2f);
+            }
+            else --i;
+        }
+        enemy1SpawnFinish = true;
+    }
+
+    IEnumerator Wave9Enemy2()
+    {
+        enemy2SpawnFinish = false;
+        float spawnStartTime = Time.time;
+        float rand = Random.Range(0, 0.2f);
+        for (int i = 0; i < waveNum * 1 - 11; i++)
+        {
+            yield return null;
+            if (Time.time > spawnStartTime + rand)
+            {
+                CreateEnemy2();
+                spawnStartTime = Time.time;
+                rand = Random.Range(0, 0.2f);
+            }
+            else --i;
+        }
+        enemy2SpawnFinish = true;
+    }
+
+    IEnumerator Wave9Enemy3()
+    {
+        enemy3SpawnFinish = false;
+        float spawnStartTime = Time.time;
+        float rand = Random.Range(0, 0.2f);
+        for (int i = 0; i < waveNum - 1; i++)
+        {
+            yield return null;
+            if (Time.time > spawnStartTime + rand)
+            {
+                CreateEnemy3();
+                spawnStartTime = Time.time;
+                rand = Random.Range(0, 0.2f);
+            }
+            else --i;
+        }
+        enemy3SpawnFinish = true;
     }
 
     void CreateEnemy1()
@@ -87,6 +263,8 @@ public class WaveManager : MonoBehaviour
 
         Vector2 pos = new Vector2(side, yRand);
         GameObject enemy = Instantiate(enemy1, pos, Quaternion.identity);
+        enemy.GetComponent<Enemy1Controller>().damage += waveNum * 0.4f;
+        enemy.GetComponent<Enemy1Controller>().health += waveNum * 0.2f;
         enemy.transform.parent = enemyParent.transform;
 
         enemies.Add(enemy);
@@ -100,6 +278,8 @@ public class WaveManager : MonoBehaviour
 
         Vector2 pos = new Vector2(side, yRand);
         GameObject enemy = Instantiate(enemy2, pos, Quaternion.identity);
+        enemy.GetComponent<Enemy2Controller>().damage += waveNum * 0.3f;
+        enemy.GetComponent<Enemy2Controller>().health += waveNum * 0.2f;
         enemy.transform.parent = enemyParent.transform;
 
         enemies.Add(enemy);
@@ -113,6 +293,8 @@ public class WaveManager : MonoBehaviour
 
         Vector2 pos = new Vector2(side, yRand);
         GameObject enemy = Instantiate(enemy3, pos, Quaternion.identity);
+        enemy.GetComponent<Enemy3Controller>().damage += waveNum * 0.2f;
+        enemy.GetComponent<Enemy3Controller>().health += waveNum * 0.2f;
         enemy.transform.parent = enemyParent.transform;
 
         enemies.Add(enemy);
@@ -130,6 +312,7 @@ public class WaveManager : MonoBehaviour
                     {
                         Destroy(enemies[i]);
                         enemies.RemoveAt(i);
+                        ScoreManager.score += 100;
                     }
                 }
                 else if (enemies[i].TryGetComponent<Enemy2Controller>(out Enemy2Controller enemy2))
@@ -138,6 +321,7 @@ public class WaveManager : MonoBehaviour
                     {
                         Destroy(enemies[i]);
                         enemies.RemoveAt(i);
+                        ScoreManager.score += 120;
                     }
                 }
                 else if (enemies[i].TryGetComponent<Enemy3Controller>(out Enemy3Controller enemy3))
@@ -146,6 +330,7 @@ public class WaveManager : MonoBehaviour
                     {
                         Destroy(enemies[i]);
                         enemies.RemoveAt(i);
+                        ScoreManager.score += 120;
                     }
                 }
             }
@@ -154,11 +339,14 @@ public class WaveManager : MonoBehaviour
 
     void WaveComplete()
     {
-        if (enemies.Count == 0 && !nextWave && !levelingUp && !cursing)
+        if (enemies.Count == 0 && !nextWave && !levelingUp && !cursing && enemy1SpawnFinish && enemy2SpawnFinish && enemy3SpawnFinish)
         {
             levelingUp = true;
             levelUpStartTime = Time.time;
             LevelUp.PointsUp();
+            Cursor.visible = true;
+            BothOrNeither.cursing = true;
+            BothOrNeither.RandomCurse();
         }
 
         if (levelingUp)
@@ -193,6 +381,7 @@ public class WaveManager : MonoBehaviour
             background.color = new Color(0, 0, 0, 0);
             cursing = false;
             PlayerController.health = PlayerController.maxHealth;
+            Cursor.visible = false;
             nextWave = true;
             waveStartTime = Time.time;
         }

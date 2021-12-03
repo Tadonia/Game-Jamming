@@ -18,7 +18,7 @@ public class StatsUpgradeNumber : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (levelName.Equals("Health")) { text.text = (LevelUp.vitUp).ToString(); }
+        if (levelName.Equals("Health")) { text.text = (LevelUp.vitUp * 1.5f).ToString(); }
         else if (levelName.Equals("Defence")) { text.text = (LevelUp.endUp * 0.2f).ToString(); }
         else if (levelName.Equals("Speed")) { text.text = (LevelUp.agiUp * 0.2f).ToString(); }
         else if (levelName.Equals("Dash Speed")) { text.text = (LevelUp.agiUp * 0.3f).ToString(); }

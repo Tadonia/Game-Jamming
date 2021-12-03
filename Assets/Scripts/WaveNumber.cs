@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Boon : MonoBehaviour
+public class WaveNumber : MonoBehaviour
 {
+    public WaveManager wave;
     Text text;
 
     // Start is called before the first frame update
@@ -16,6 +17,6 @@ public class Boon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        text.text = BothOrNeither.curses[BothOrNeither.rand].Boon;
+        text.text = wave.waveNum.ToString();
     }
 }

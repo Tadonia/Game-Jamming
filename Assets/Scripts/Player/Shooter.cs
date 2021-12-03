@@ -12,6 +12,11 @@ public class Shooter : MonoBehaviour
     public static float bulletSize;
     public static float bulletDamage;
 
+    float speedBonus = 0;
+    float rateBonus = 0;
+    float sizeBonus = 0;
+    public static float damageBonus = 0;
+
     public Transform arm;
     Transform aimStart;
 
@@ -76,17 +81,19 @@ public class Shooter : MonoBehaviour
 
     void MakeBullets()
     {
-        if (Input.GetKey(KeyCode.Mouse0) && Time.time > shootStartTime + 1f/fireRate)
+        if (Input.GetKey(KeyCode.Mouse0) && Time.time > shootStartTime + 1f/(fireRate + rateBonus))
         {
             GameObject bullet = new GameObject("Bullet");
             bullet.transform.SetParent(bulletsParent.transform);
 
             bullet.AddComponent<SpriteRenderer>().sprite = bulletSprite;
             bullet.AddComponent<BoxCollider2D>().isTrigger = true;
+            //bullet.GetComponent<BoxCollider2D>().size = new Vector2(bulletSize / 2, bulletSize / 4);
+            bullet.GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.25f);
 
             Transform tran = bullet.transform;
             tran.position = arm.GetChild(0).transform.position;
-            tran.localScale = new Vector3(bulletSize, bulletSize, 1);
+            tran.localScale = new Vector3(bulletSize + sizeBonus, bulletSize + sizeBonus, 1);
             tran.right = aimPos;
 
             bullet.layer = 9;
@@ -101,7 +108,7 @@ public class Shooter : MonoBehaviour
         if (bullets.Count != 0)
             foreach (GameObject bullet in bullets)
             {
-                bullet.transform.Translate(new Vector3(bulletSpeed * Time.deltaTime, 0, 0), bullet.transform);
+                bullet.transform.Translate(new Vector3((bulletSpeed - speedBonus) * Time.deltaTime, 0, 0), bullet.transform);
             }
     }
 
@@ -115,6 +122,27 @@ public class Shooter : MonoBehaviour
                 Instantiate(explosion, bullets[i].transform.position, Quaternion.identity);
                 Destroy(bullets[i]);
                 bullets.RemoveAt(i);
+            }
+        }
+    }
+
+    void AirBonus()
+    {
+        if (PlayerController.airBonus)
+        {
+            if (PlayerController.isGrounded)
+            {
+                speedBonus = -0.3f;
+                rateBonus = -0.2f;
+                sizeBonus = -1.5f;
+                damageBonus = -0.1f;
+            }
+            else
+            {
+                speedBonus = 0.3f;
+                rateBonus = 0.2f;
+                sizeBonus = 1.5f;
+                damageBonus = 0.1f;
             }
         }
     }

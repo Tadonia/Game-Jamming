@@ -19,6 +19,7 @@ public class LevelUp : MonoBehaviour
     public static int dexUp;
 
     public static bool close;
+    public static bool leveling;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +41,7 @@ public class LevelUp : MonoBehaviour
     public static void PointsUp()
     {
         points += 5;
+        leveling = true;
     }
 
     public static void VitUp()
@@ -142,7 +144,7 @@ public class LevelUp : MonoBehaviour
             str += strUp;
             dex += dexUp;
 
-            PlayerController.maxHealth += vitUp;
+            PlayerController.maxHealth += vitUp * 1.5f + PlayerController.healthBonus;
             PlayerController.defence += endUp * 0.2f;
             PlayerController.maxSpeed += agiUp * 0.2f;
             PlayerController.dashSpeed += agiUp * 0.3f;
@@ -158,6 +160,7 @@ public class LevelUp : MonoBehaviour
             dexUp = 0;
 
             close = true;
+            leveling = false;
         }
     }
 }

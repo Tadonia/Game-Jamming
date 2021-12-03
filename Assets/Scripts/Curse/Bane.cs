@@ -6,18 +6,16 @@ using UnityEngine.UI;
 public class Bane : MonoBehaviour
 {
     Text text;
-    BothOrNeither curse;
 
     // Start is called before the first frame update
     void Start()
     {
         text = GetComponent<Text>();
-        curse = GetComponentInParent<BothOrNeither>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        text.text = curse.curses[curse.rand].Bane;
+        text.text = BothOrNeither.curses[BothOrNeither.rand].Bane;
     }
 }

@@ -27,6 +27,7 @@ public class Enemy2Controller : MonoBehaviour
     public float accelerationY = 20.0f;
 
     Transform player;
+    Transform brace;
     //SpriteRenderer sprite;
 
     // Start is called before the first frame update
@@ -34,6 +35,7 @@ public class Enemy2Controller : MonoBehaviour
     {
         maxSpeedX = Random.Range(minRangeX, maxRangeX);
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        brace = transform.GetChild(0).transform;
         speedX = maxSpeedX;
 
         Vector2 pos = transform.position;
@@ -65,6 +67,8 @@ public class Enemy2Controller : MonoBehaviour
         Vector2 pos = transform.position;
         Vector2 playerPos = player.position;
         transform.position = new Vector3(pos.x + speedX * Time.deltaTime, pos.y);
+        transform.rotation = Quaternion.Euler(0, 0, transform.eulerAngles.z - speedX / 4);
+        brace.eulerAngles = new Vector3(0, 0, 0);
     }
 
     void Bounce()
@@ -108,7 +112,7 @@ public class Enemy2Controller : MonoBehaviour
     {
         if (collision.CompareTag("PlayerBullet"))
         {
-            health -= Shooter.bulletDamage;
+            health -= Shooter.bulletDamage + Shooter.damageBonus;
         }
     }
 }

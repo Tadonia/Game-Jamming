@@ -12,6 +12,7 @@ public class PlayerStats : MonoBehaviour
     public float maxJumpHeight = 7.0f;
     public float dashSpeed = 10.0f;
     public float immunityTime = 0.5f;
+    public int maxJumps = 1;
 
     public float bulletSpeed = 15.0f;
     public float fireRate = 5.0f;
@@ -22,6 +23,7 @@ public class PlayerStats : MonoBehaviour
     void Start()
     {
         PlayerController.maxHealth = maxHealth;
+        PlayerController.health = maxHealth;
         PlayerController.defence = defence;
         PlayerController.damageReduction = damageReduction;
         PlayerController.acceleration = acceleration;
@@ -29,6 +31,7 @@ public class PlayerStats : MonoBehaviour
         PlayerController.maxJumpHeight = maxJumpHeight;
         PlayerController.dashSpeed = dashSpeed;
         PlayerController.immunityTime = immunityTime;
+        PlayerController.maxJumps = maxJumps;
         Shooter.bulletSpeed = bulletSpeed;
         Shooter.fireRate = fireRate;
         Shooter.bulletSize = bulletSize;
@@ -38,6 +41,21 @@ public class PlayerStats : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (BothOrNeither.close)
+        {
+            maxHealth = PlayerController.maxHealth;
+            defence = PlayerController.defence;
+            damageReduction = PlayerController.damageReduction;
+            acceleration = PlayerController.acceleration;
+            maxSpeed = PlayerController.maxSpeed;
+            maxJumpHeight = PlayerController.maxJumpHeight;
+            dashSpeed = PlayerController.dashSpeed;
+            immunityTime = PlayerController.immunityTime;
+            maxJumps = PlayerController.maxJumps;
+            bulletSpeed = Shooter.bulletSpeed;
+            fireRate = Shooter.fireRate;
+            bulletSize = Shooter.bulletSize;
+            bulletDamage = Shooter.bulletDamage;
+        }
     }
 }
