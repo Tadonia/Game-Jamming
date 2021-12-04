@@ -8,11 +8,13 @@ public class WaveNumber : MonoBehaviour
     public WaveManager wave;
     Text text;
     bool gameOver;
+    public static bool newHighWave;
 
     // Start is called before the first frame update
     void Start()
     {
         text = GetComponent<Text>();
+        newHighWave = false;
     }
 
     // Update is called once per frame
@@ -22,7 +24,11 @@ public class WaveNumber : MonoBehaviour
         if (GameOverManager.gameOver && !gameOver)
         {
             gameOver = true;
-            PlayerPrefs.SetInt("Wave", wave.waveNum);
+            if (PlayerPrefs.GetInt("Wave", 0) < wave.waveNum)
+            {
+                PlayerPrefs.SetInt("Wave", wave.waveNum);
+                newHighWave = true;
+            }
         }
     }
 }

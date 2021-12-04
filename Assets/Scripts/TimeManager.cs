@@ -9,11 +9,14 @@ public class TimeManager : MonoBehaviour
     Text text;
     bool gameOver;
 
+    public static bool newHighTime;
+
     // Start is called before the first frame update
     void Start()
     {
         timer = 0;
         text = GetComponent<Text>();
+        newHighTime = false;
     }
 
     // Update is called once per frame
@@ -30,7 +33,10 @@ public class TimeManager : MonoBehaviour
         {
             gameOver = true;
             if (PlayerPrefs.GetFloat("Time", 0) < timer)
+            {
                 PlayerPrefs.SetFloat("Time", timer);
+                newHighTime = true;
+            }
 }
     }
 }
