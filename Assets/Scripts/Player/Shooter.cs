@@ -28,6 +28,9 @@ public class Shooter : MonoBehaviour
     GameObject bulletsParent;
     List<GameObject> bullets;
 
+    public AudioSource shoot;
+    public AudioSource hit;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -105,6 +108,8 @@ public class Shooter : MonoBehaviour
             bullet.tag = "PlayerBullet";
             bullets.Add(bullet);
             shootStartTime = Time.time;
+
+            shoot.Play();
         }
     }
 
@@ -127,6 +132,8 @@ public class Shooter : MonoBehaviour
                 Instantiate(explosion, bullets[i].transform.position, Quaternion.identity);
                 Destroy(bullets[i]);
                 bullets.RemoveAt(i);
+
+                hit.Play();
             }
         }
     }
@@ -141,6 +148,7 @@ public class Shooter : MonoBehaviour
                 rateBonus = -0.4f;
                 sizeBonus = -3.0f;
                 damageBonus = -0.2f;
+                Debug.Log("bad");
             }
             else
             {
@@ -148,6 +156,7 @@ public class Shooter : MonoBehaviour
                 rateBonus = 0.2f;
                 sizeBonus = 1.5f;
                 damageBonus = 0.1f;
+                Debug.Log("good");
             }
         }
     }

@@ -36,7 +36,7 @@ public class BothOrNeither : MonoBehaviour
     void Update()
     {
         ActivateCurse();
-        Debug.Log(rand);
+        //Debug.Log(rand);
     }
 
     void ActivateCurse()
@@ -113,7 +113,7 @@ public class BothOrNeither : MonoBehaviour
             while (cursedUsed[rand])
             {
                 rand = Random.Range(1, curses.Count);
-                Debug.Log(rand);
+                //Debug.Log(rand);
             }
         else rand = 0;
     }

@@ -21,6 +21,8 @@ public class GameOverManager : MonoBehaviour
     public Text highWave;
     public Text highScore;
 
+    public RectTransform screenTransform;
+
     bool isOver;
     float gameOverStartTime;
     bool flashing;
@@ -42,6 +44,8 @@ public class GameOverManager : MonoBehaviour
         highTime.color = new Color(1, 1, 1, 0);
         highWave.color = new Color(1, 1, 1, 0);
         highScore.color = new Color(1, 1, 1, 0);
+
+        screenTransform.anchoredPosition = new Vector2(1500, 75);
     }
 
     // Update is called once per frame
@@ -55,6 +59,7 @@ public class GameOverManager : MonoBehaviour
                 isOver = true;
                 gameOverStartTime = Time.time;
                 Cursor.visible = true;
+                screenTransform.anchoredPosition = new Vector2(0, 75);
             }
         }
         if (isOver)

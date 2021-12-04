@@ -146,8 +146,8 @@ public class LevelUp : MonoBehaviour
 
             PlayerController.maxHealth += vitUp * 1.5f + PlayerController.healthBonus;
             PlayerController.defence += endUp * 0.2f;
-            PlayerController.maxSpeed += agiUp * 0.2f;
-            PlayerController.dashSpeed += agiUp * 0.3f;
+            PlayerController.maxSpeed += agiUp * 0.3f;
+            PlayerController.dashSpeed += agiUp * 0.4f;
             Shooter.bulletDamage += strUp * 0.3f;
             Shooter.fireRate += dexUp * 0.2f;
             Shooter.bulletSpeed += dexUp * 1.5f;

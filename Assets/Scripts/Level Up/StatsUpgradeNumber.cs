@@ -20,8 +20,8 @@ public class StatsUpgradeNumber : MonoBehaviour
     {
         if (levelName.Equals("Health")) { text.text = (LevelUp.vitUp * 1.5f).ToString(); }
         else if (levelName.Equals("Defence")) { text.text = (LevelUp.endUp * 0.2f).ToString(); }
-        else if (levelName.Equals("Speed")) { text.text = (LevelUp.agiUp * 0.2f).ToString(); }
-        else if (levelName.Equals("Dash Speed")) { text.text = (LevelUp.agiUp * 0.3f).ToString(); }
+        else if (levelName.Equals("Speed")) { text.text = (LevelUp.agiUp * 0.3f).ToString(); }
+        else if (levelName.Equals("Dash Speed")) { text.text = (LevelUp.agiUp * 0.4f).ToString(); }
         else if (levelName.Equals("Damage")) { text.text = (LevelUp.strUp * 0.3f).ToString(); }
         else if (levelName.Equals("Fire Rate")) { text.text = (LevelUp.dexUp * 0.2f).ToString(); }
         else if (levelName.Equals("Bullet Speed")) { text.text = (LevelUp.dexUp * 1.5f).ToString(); }

@@ -51,7 +51,7 @@ Material:
     - Vector1_292abdd515b54b2ebce41087b378a591: 3
     - Vector1_d7c36f134db34375b37f0cc7a8a85428: 0.05
     - _EnableExternalAlpha: 0
-    - _Fade: 3.9704142
+    - _Fade: 1.5045171
     m_Colors:
     - Color_4c127829ea6d4ff385f2df6239f77fe9: {r: 3.7333333, g: 0.03137255, b: 0, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

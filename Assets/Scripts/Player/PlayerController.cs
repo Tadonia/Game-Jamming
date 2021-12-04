@@ -43,6 +43,10 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer sprite;
     SpriteRenderer armSprite;
 
+    public AudioSource jump;
+    public AudioSource hurt;
+    public AudioSource dash;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -71,6 +75,7 @@ public class PlayerController : MonoBehaviour
         AfterImages();
         ChangeHealthBar();
         AirBonus();
+        GameOver();
         animator.SetFloat("MoveX", speed * 1.5f);
         //Debug.Log(speed);
         //Debug.Log(dashing);
@@ -102,7 +107,7 @@ public class PlayerController : MonoBehaviour
         }
         else { animator.speed = 1; }*/
 
-        animator.speed = Mathf.Abs(speed) / (Mathf.Clamp((maxSpeed + speedBonus), 1, maxSpeed + speedBonus) - 1);
+        animator.speed = Mathf.Abs(speed) / (Mathf.Clamp((maxSpeed + speedBonus), 1.1f, maxSpeed + speedBonus) - 1);
     }
 
     void GetInputs()
@@ -131,6 +136,7 @@ public class PlayerController : MonoBehaviour
             {
                 speed = -dashSpeed - dashSpeedBonus;
                 dashing = true;
+                dash.Play();
             }
             else 
             { 
@@ -144,6 +150,7 @@ public class PlayerController : MonoBehaviour
             {
                 speed = dashSpeed + dashSpeedBonus;
                 dashing = true;
+                dash.Play();
             }
             else
             {
@@ -188,6 +195,7 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(new Vector2(0, maxJumpHeight), ForceMode2D.Impulse);
             jumpNum += 1;
             inAir = true;
+            jump.Play();
         }
 
     }
@@ -233,6 +241,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void GameOver()
+    {
+        if (GameOverManager.gameOver)
+        {
+            transform.position = new Vector3(transform.position.x, -50, 0);
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isGrounded = true;
@@ -267,6 +283,7 @@ public class PlayerController : MonoBehaviour
                 IEnumerator knockback = Knockback(collision.transform.position);
                 StartCoroutine(HitFlash());
                 StartCoroutine(knockback);
+                hurt.Play();
             }
         }
     }
