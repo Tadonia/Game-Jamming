@@ -67,7 +67,7 @@ Material:
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableExternalAlpha: 0
     - _EnableFogOnTransparent: 1
-    - _Fade: 0.37020698
+    - _Fade: 4.3704143
     - _OpaqueCullMode: 2
     - _RayTracing: 0
     - _ReceivesSSR: 1
