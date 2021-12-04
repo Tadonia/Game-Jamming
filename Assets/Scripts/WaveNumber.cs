@@ -7,6 +7,7 @@ public class WaveNumber : MonoBehaviour
 {
     public WaveManager wave;
     Text text;
+    bool gameOver;
 
     // Start is called before the first frame update
     void Start()
@@ -18,5 +19,10 @@ public class WaveNumber : MonoBehaviour
     void Update()
     {
         text.text = wave.waveNum.ToString();
+        if (GameOverManager.gameOver && !gameOver)
+        {
+            gameOver = true;
+            PlayerPrefs.SetInt("Wave", wave.waveNum);
+        }
     }
 }

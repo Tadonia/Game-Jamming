@@ -6,6 +6,7 @@ public class Shooter : MonoBehaviour
 {
     public Sprite bulletSprite;
     public GameObject explosion;
+    public Material material;
 
     public static float bulletSpeed;
     public static float fireRate;
@@ -40,15 +41,19 @@ public class Shooter : MonoBehaviour
 
         bulletsParent = new GameObject("Bullets");
         bullets = new List<GameObject>();
+
+        damageBonus = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         AimLine();
-        MakeBullets();
+        if (!GameOverManager.gameOver)
+            MakeBullets();
         MoveBullets();
         DestroyBullets();
+        AirBonus();
     }
 
     void AimLine()
@@ -87,8 +92,8 @@ public class Shooter : MonoBehaviour
             bullet.transform.SetParent(bulletsParent.transform);
 
             bullet.AddComponent<SpriteRenderer>().sprite = bulletSprite;
+            bullet.GetComponent<SpriteRenderer>().material = material;
             bullet.AddComponent<BoxCollider2D>().isTrigger = true;
-            //bullet.GetComponent<BoxCollider2D>().size = new Vector2(bulletSize / 2, bulletSize / 4);
             bullet.GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.25f);
 
             Transform tran = bullet.transform;
@@ -132,10 +137,10 @@ public class Shooter : MonoBehaviour
         {
             if (PlayerController.isGrounded)
             {
-                speedBonus = -0.3f;
-                rateBonus = -0.2f;
-                sizeBonus = -1.5f;
-                damageBonus = -0.1f;
+                speedBonus = -0.6f;
+                rateBonus = -0.4f;
+                sizeBonus = -3.0f;
+                damageBonus = -0.2f;
             }
             else
             {

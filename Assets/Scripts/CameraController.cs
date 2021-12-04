@@ -24,6 +24,7 @@ public class CameraController : MonoBehaviour
         if (pos.x < left) { pos.x = left; }
 
         pos.z = -10;
-        transform.position = pos;
+        if (!GameOverManager.gameOver)
+            transform.position = pos;
     }
 }

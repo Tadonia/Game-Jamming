@@ -7,6 +7,7 @@ public class TimeManager : MonoBehaviour
 {
     public static float timer;
     Text text;
+    bool gameOver;
 
     // Start is called before the first frame update
     void Start()
@@ -18,12 +19,18 @@ public class TimeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!LevelUp.leveling && !BothOrNeither.cursing)
+        if (!LevelUp.leveling && !BothOrNeither.cursing && !GameOverManager.gameOver && WaveManager.gameStart)
             timer += Time.deltaTime;
         string fraction = ((timer - (int)timer) * 100).ToString("00");
         string seconds = ((int)timer % 60).ToString("00");
         //string minutes = (((int)timer - int.Parse(seconds)) / 60).ToString();
         string minutes = ((int)(timer / 60)).ToString("00");
         text.text = minutes + ":" + seconds + ":" + fraction;
+        if (GameOverManager.gameOver && !gameOver)
+        {
+            gameOver = true;
+            if (PlayerPrefs.GetFloat("Time", 0) < timer)
+                PlayerPrefs.SetFloat("Time", timer);
+}
     }
 }

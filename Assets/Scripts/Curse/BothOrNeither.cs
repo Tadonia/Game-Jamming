@@ -12,6 +12,7 @@ public class BothOrNeither : MonoBehaviour
     public static bool cursing;
 
     public static bool[] cursedUsed;
+    public static int numOfCursesUsed;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,7 @@ public class BothOrNeither : MonoBehaviour
 
         rand = Random.Range(1, curses.Count);
         cursedUsed = new bool[curses.Count + 1];
+        numOfCursesUsed = 0;
     }
 
     // Update is called once per frame
@@ -76,6 +78,8 @@ public class BothOrNeither : MonoBehaviour
                 PlayerController.defence += 2;
                 PlayerController.maxSpeed -= 2;
                 PlayerController.dashSpeed -= 8;
+                if (PlayerController.maxSpeed < 0) { PlayerController.maxSpeed = 0; }
+                if (PlayerController.dashSpeed < 0) { PlayerController.dashSpeed = 0; }
             }
             else if (rand == 8)
             {

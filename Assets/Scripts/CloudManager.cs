@@ -5,6 +5,7 @@ using UnityEngine;
 public class CloudManager : MonoBehaviour
 {
     public Sprite[] cloudSprites;
+    public Material material;
     public int numberOfClouds = 20;
     public float speed = 2.0f;
     GameObject[] clouds;
@@ -56,6 +57,7 @@ public class CloudManager : MonoBehaviour
     {
         int rand = Random.Range(0, cloudSprites.Length);
         cloud.GetComponent<SpriteRenderer>().sprite = cloudSprites[rand];
+        cloud.GetComponent<SpriteRenderer>().material = material;
 
         float height = Camera.main.orthographicSize + 2;
         float randX = Random.Range(-20.0f, 20.0f);

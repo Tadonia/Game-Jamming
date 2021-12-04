@@ -55,6 +55,10 @@ public class PlayerController : MonoBehaviour
         afterimagesRenderer = GetComponent<ParticleSystemRenderer>();
         sprite = GetComponent<SpriteRenderer>();
         armSprite = GetComponent<Shooter>().GetArm().gameObject.GetComponent<SpriteRenderer>();
+
+        isGrounded = false;
+        airBonus = false;
+        healthBonus = 0;
     }
 
     // Update is called once per frame
@@ -98,7 +102,7 @@ public class PlayerController : MonoBehaviour
         }
         else { animator.speed = 1; }*/
 
-        animator.speed = Mathf.Abs(speed) / ((maxSpeed + speedBonus) - 1);
+        animator.speed = Mathf.Abs(speed) / (Mathf.Clamp((maxSpeed + speedBonus), 1, maxSpeed + speedBonus) - 1);
     }
 
     void GetInputs()

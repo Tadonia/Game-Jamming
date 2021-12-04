@@ -24,6 +24,9 @@ public class WaveManager : MonoBehaviour
     bool cursing;
     float curseStartTime;
 
+    float gameStartTime;
+    public static bool gameStart;
+
     bool nextWave;
     float waveStartTime;
     bool enemy1SpawnFinish = true;
@@ -42,12 +45,20 @@ public class WaveManager : MonoBehaviour
         levelUpButton.anchoredPosition = new Vector2(246, -70);
         curseMenu.anchoredPosition = new Vector2(1600, 0);
         background.color = new Color(0, 0, 0, 0);
+
+        gameStartTime = Time.time;
+        gameStart = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (waveNum == 0)
+        if (Time.time > gameStartTime + 5.0f && !gameStart)
+        {
+            gameStart = true;
+        }
+
+        if (waveNum == 0 && gameStart)
         {
             Wave1();
             waveNum++;
@@ -264,7 +275,7 @@ public class WaveManager : MonoBehaviour
         Vector2 pos = new Vector2(side, yRand);
         GameObject enemy = Instantiate(enemy1, pos, Quaternion.identity);
         enemy.GetComponent<Enemy1Controller>().damage += waveNum * 0.4f;
-        enemy.GetComponent<Enemy1Controller>().health += waveNum * 0.2f;
+        enemy.GetComponent<Enemy1Controller>().health += waveNum * 0.3f;
         enemy.transform.parent = enemyParent.transform;
 
         enemies.Add(enemy);
@@ -279,7 +290,7 @@ public class WaveManager : MonoBehaviour
         Vector2 pos = new Vector2(side, yRand);
         GameObject enemy = Instantiate(enemy2, pos, Quaternion.identity);
         enemy.GetComponent<Enemy2Controller>().damage += waveNum * 0.3f;
-        enemy.GetComponent<Enemy2Controller>().health += waveNum * 0.2f;
+        enemy.GetComponent<Enemy2Controller>().health += waveNum * 0.3f;
         enemy.transform.parent = enemyParent.transform;
 
         enemies.Add(enemy);
@@ -293,7 +304,7 @@ public class WaveManager : MonoBehaviour
 
         Vector2 pos = new Vector2(side, yRand);
         GameObject enemy = Instantiate(enemy3, pos, Quaternion.identity);
-        enemy.GetComponent<Enemy3Controller>().damage += waveNum * 0.2f;
+        enemy.GetComponent<Enemy3Controller>().damage += waveNum * 0.3f;
         enemy.GetComponent<Enemy3Controller>().health += waveNum * 0.2f;
         enemy.transform.parent = enemyParent.transform;
 
@@ -339,7 +350,7 @@ public class WaveManager : MonoBehaviour
 
     void WaveComplete()
     {
-        if (enemies.Count == 0 && !nextWave && !levelingUp && !cursing && enemy1SpawnFinish && enemy2SpawnFinish && enemy3SpawnFinish)
+        if (enemies.Count == 0 && !nextWave && !levelingUp && !cursing && enemy1SpawnFinish && enemy2SpawnFinish && enemy3SpawnFinish && gameStart)
         {
             levelingUp = true;
             levelUpStartTime = Time.time;
